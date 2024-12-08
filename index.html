@@ -86,26 +86,14 @@
         
         // Устанавливаем таймер, чтобы дать время видео начать, затем загружаем файл
         setTimeout(() => {
-            downloadFile('path/to/your/file.jpg'); // Замените на фактический путь к вашему файлу на сервере
-        }, 1000); // Задержка 1 секунды для начала воспроизвания видео
-    });
-
-    async function downloadFile(fileUrl) {
-        try {
-            const response = await fetch(fileUrl);
-            if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
-            
-            const blob = await response.blob();
             const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = 'images/image.jpg'; // Укажите имя загружаемого файла
+            link.href = 'images/image.jpg'; // Замените на фактический путь к вашему файлу
+            link.download = ''; // Указывает браузеру, что это загрузка
             document.body.appendChild(link);
             link.click(); // Имитируем клик для загрузки файла
             document.body.removeChild(link); // Удаляем ссылку после клика
-        } catch (error) {
-            console.error('Ошибка при загрузке файла:', error);
-        }
-    }
+        }, 1000); // Задержка 1 секунды для начала проигрывания видео
+    });
 </script>
 
 </body>
