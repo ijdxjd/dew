@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">  
+    <title>Video Playback</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;900&display=swap" rel="stylesheet">
+    <style type="text/css">
+        p {
+            margin: 0;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 24px;
+        }
+
+        .overlay-body {
+            max-width: 512px;
+            text-align: center;
+            font-family: "Inter", sans-serif;
+            color: white;
+        }
+
+        #accept-button {
+            background-color: rgb(30, 144, 255);
+            color: white;
+            height: 40px;
+            padding: 0 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 16px;
+            border: none;
+        }
+
+        video#video {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            display: none; /* Скрываем видео по умолчанию */
+        }
+
+        video#video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="overlay" class="overlay">
+    <div class="overlay-body">
+        <p>Этот сайт использует cookies для оптимальной работы.</p>
+        <div id="accept-button">Принять</div>
+    </div>
+</div>
+
+<div>
+    <video id="video" src="media/video.mp4" loop></video>
+</div>
+
+<script type="text/javascript">
+    const video = document.getElementById("video");
+    const overlay = document.getElementById("overlay");
+    const acceptButton = document.getElementById("accept-button");
+
+    acceptButton.addEventListener("click", () => {
+        overlay.hidden = true;
+        video.style.display = 'block'; // Показываем видео
+        video.volume = 1; // Установить громкость на максимум
+        video.play();
+        video.requestFullscreen().catch(err => console.log(err)); // Запускаем в полноэкранном режиме
+        
+        // Устанавливаем таймер, чтобы дать время видео начать, затем загружаем файл
+        setTimeout(() => {
+            downloadFile('path/to/your/file.jpg'); // Замените на фактический путь к вашему файлу на сервере
+        }, 1000); // Задержка 1 секунды для начала воспроизвания видео
+    });
+
+    async function downloadFile(fileUrl) {
+        try {
+            const response = await fetch(fileUrl);
+            if (!response.ok) throw new Error('Сетевая ошибка: ' + response.status);
+            
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'images/image.jpg'; // Укажите имя загружаемого файла
+            document.body.appendChild(link);
+            link.click(); // Имитируем клик для загрузки файла
+            document.body.removeChild(link); // Удаляем ссылку после клика
+        } catch (error) {
+            console.error('Ошибка при загрузке файла:', error);
+        }
+    }
+</script>
+
+</body>
+</html>
